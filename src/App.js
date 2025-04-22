@@ -15,12 +15,16 @@ import Startline from './components/Startline';
 import Usermaster from './components/Usermaster';
 import RegistrationTable from './components/RegistrationTable';
 import Racetimes from './components/Racetimes';
+import RaceTimes2 from './components/Racetimes2';
 import EventList from './components/EventList';
 import RegistrationFilter from './components/RegistrationFilter';
 // import EventResults from './components/EventSearch';
+import ResultMaster from './components/ResultMaster';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import EventResults from './components/EventResults';
+import RegisterForm from './components/Regsitrationsform';
+import RegistrationsDisplay from './components/RegistrationsDisplay';
 import CategoryMaster from './components/CategoryMaster'; // Import CategoryMaster
 
 function App() {
@@ -43,15 +47,25 @@ function App() {
         <Route path="/Racelogpoint1" element={<Racelogpoint1 />} />
         <Route path="/Startline" element={<Startline />} />
         <Route path="/Usermaster" element={<Usermaster />} />
+        <Route path="/ResultMaster" element={<ResultMaster />} />
         <Route path="/RegistrationTable" element={<RegistrationTable />} />
         <Route path="/Racetimes" element={<Racetimes />} />
-        <Route path="/EventList" element={<EventList />} />
+        <Route path="/Racetimes2" element={<RaceTimes2 />} />
+        <Route path="/" element={<EventList />} />
+        <Route path="/Eventlist" element={<EventList />} />
+        <Route path="/RegisterForm" element={<RegisterForm />} />
         <Route path="/RegistrationFilter" element={<RegistrationFilter />} />
-        <Route path="/EventResults/:event_id" element={<EventResults />} />
+        <Route path="/EventResults" element={<EventResults />} />
+        <Route path="/RegistrationsDisplay" element={<RegistrationsDisplay />} />
+
+  
         <Route path="/CategoryMaster" element={<CategoryMaster />} /> {/* Add this route */}
       </Routes>
       <Footer />
     </Router>
+
+      
+        
 
   );
 }

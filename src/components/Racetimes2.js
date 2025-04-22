@@ -18,7 +18,7 @@ import certificateBg4 from '../images/logo-black.png';
 import { useLocation } from 'react-router-dom';
 import api from "../axios";
 
-const RaceTimes = () => {
+const RaceTimes2 = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchType, setSearchType] = useState("bibno");
     const [raceInfo, setRaceInfo] = useState(null);
@@ -244,8 +244,7 @@ const RaceTimes = () => {
         printWindow.document.close();
     };
 
-
-    const getCertificateBackground = useCallback((eventId) => {
+    const getCertificateStyles = useCallback((eventId, recipientName) => {
         console.log('Race Info Event Details:', {
             eventid: raceInfo?.eventid,
             event_id: raceInfo?.event_id,
@@ -253,63 +252,123 @@ const RaceTimes = () => {
         });
 
         const finalEventId = Number(
-            location.state?.event_id || 
-            eventId || 
-            raceInfo?.eventid || 
-            raceInfo?.event_id || 
+            location.state?.event_id ||
+            eventId ||
+            raceInfo?.eventid ||
+            raceInfo?.event_id ||
             1
         );
-        
+
         console.log('Final Event ID used:', finalEventId);
 
         switch (finalEventId) {
             case 1:
-                return certificateBg1;
+                return {
+                    background: certificateBg1,
+                    nameStyle: "text-red-500 font-bold text-3xl",
+                    layout: "above",
+                    certificateText: `This certificate goes to ${recipientName} for their outstanding performance.`
+                };
             case 2:
-                return certificateBg2;
+                return {
+                    background: certificateBg2,
+                    nameStyle: "text-green-500 italic text-4xl",
+                    layout: "below",
+                    certificateText: `This certificate is given to ${recipientName} in recognition of their achievements.`
+                };
             case 3:
-                return certificateBg3;
+                return {
+                    background: certificateBg3,
+                    nameStyle: "text-blue-600 underline text-2xl",
+                    layout: "above",
+                    certificateText: `${recipientName} is honored with this certificate for their dedication.`
+                };
             case 4:
-                return certificateBg4;
+                return {
+                    background: certificateBg4,
+                    nameStyle: "text-yellow-400 font-extrabold text-5xl",
+                    layout: "below",
+                    certificateText: `We proudly award this certificate to ${recipientName} for excellence.`
+                };
             default:
-                return certificateBg1;
+                return {
+                    background: certificateBg1,
+                    nameStyle: "text-black text-xl",
+                    layout: "above",
+                    certificateText: `Certificate of Appreciation awarded to ${recipientName}.`
+                };
         }
     }, [location.state?.event_id, raceInfo]);
 
+
+
+
+
+    // const getCertificateBackground = useCallback((eventId) => {
+    //     console.log('Race Info Event Details:', {
+    //         eventid: raceInfo?.eventid,
+    //         event_id: raceInfo?.event_id,
+    //         rawEventId: eventId
+    //     });
+
+    //     const finalEventId = Number(
+    //         location.state?.event_id ||
+    //         eventId ||
+    //         raceInfo?.eventid ||
+    //         raceInfo?.event_id ||
+    //         1
+    //     );
+
+    //     console.log('Final Event ID used:', finalEventId);
+
+    //     switch (finalEventId) {
+    //         case 1:
+    //             return certificateBg1;
+    //         case 2:
+    //             return certificateBg2;
+    //         case 3:
+    //             return certificateBg3;
+    //         case 4:
+    //             return certificateBg4;
+    //         default:
+    //             return certificateBg1;
+    //     }
+    // }, [location.state?.event_id, raceInfo]);
+
     useEffect(() => {
-        if(raceInfo) {
+        if (raceInfo) {
             console.log('Event ID:', raceInfo.eventid, 'Race info:', raceInfo);
         }
     }, [raceInfo]);
 
     useEffect(() => {
-        if(raceInfo) {
+        if (raceInfo) {
             console.log('Debug info:', {
                 eventId: raceInfo.eventid,
                 eventIdType: typeof raceInfo.eventid,
-                selectedBackground: getCertificateBackground(raceInfo.eventid)
+                selectedBackground: getCertificateStyles(raceInfo.eventid)
             });
         }
-    }, [raceInfo, getCertificateBackground]);
+    }, [raceInfo, getCertificateStyles]);
 
     useEffect(() => {
-        if(raceInfo) {
+        if (raceInfo) {
             console.log('Certificate Debug:', {
                 eventId: raceInfo.event_id,
                 eventName: raceInfo.event_name,
-                backgroundImage: getCertificateBackground(raceInfo.event_id),
+                backgroundImage: getCertificateStyles(raceInfo.event_id),
                 raceInfo: raceInfo
             });
         }
-    }, [raceInfo, getCertificateBackground]);
+    }, [raceInfo, getCertificateStyles]);
 
     useEffect(() => {
-        if(raceInfo) {
+        if (raceInfo) {
             console.log('Race Info Object:', {
                 ...raceInfo,
                 keys: Object.keys(raceInfo)
             });
-            
+
             // Log all available fields and their values
             Object.keys(raceInfo).forEach(key => {
                 console.log(`${key}:`, raceInfo[key]);
@@ -337,7 +396,6 @@ const RaceTimes = () => {
                 <h1 className="text-2xl md:text-3xl font-extrabold text-gray-700 text-center mb-4 md:mb-6">
                     Race Information
                 </h1>
-
                 {/* Input Form */}
                 <form onSubmit={fetchRaceInfo} className="flex flex-col md:flex-row gap-4 mb-6">
                     <select
@@ -380,12 +438,9 @@ const RaceTimes = () => {
                         {/* Certificate Section */}
                         <div
                             ref={certificateRef}
-                            className="bg-gradient-to-br from-violet-100 via-purple-50 to-blue-100 border-4 border-gray-800 shadow-xl p-4 md:p-8 rounded-xl text-center space-y-4"
+                            className="border-4 border-gray-800 shadow-xl p-4 md:p-8 rounded-xl text-center space-y-4 relative"
                             style={{
-                                position: 'relative',
-                                transform: 'translate3d(0,0,0)',
-                                backfaceVisibility: 'hidden',
-                                backgroundImage: `url(${getCertificateBackground(raceInfo?.eventid || raceInfo?.event_id)})`,
+                                backgroundImage: `url(${getCertificateStyles(raceInfo?.eventid || raceInfo?.event_id).background})`,
                                 backgroundSize: '50%',
                                 backgroundPosition: 'center',
                                 backgroundRepeat: 'no-repeat',
@@ -394,26 +449,26 @@ const RaceTimes = () => {
                                 maxWidth: '1200px',
                                 margin: '0 auto',
                                 backgroundColor: 'white',
+                                position: 'relative',
+                                transform: 'translate3d(0,0,0)',
+                                backfaceVisibility: 'hidden', 
+
                             }}
                         >
                             <div className="absolute inset-0 bg-white/70"></div>
-                            
-                            <div style={{ 
-                                position: 'relative', 
-                                zIndex: 2,
-                            }}>
-                                {/* New Decorative Border */}
+
+                            <div style={{ position: 'relative', zIndex: 2 }}>
+                                {/* Decorative Border */}
                                 <div className="absolute inset-0 mx-8 -top-8 mb-3 pointer-events-none">
                                     <div className="absolute top-0 left-0 w-16 h-16 border-t-[3px] border-l-[3px] border-black rounded-tl-lg -m-1"></div>
                                     <div className="absolute top-0 right-0 w-16 h-16 border-t-[3px] border-r-[3px] border-black rounded-tr-lg -m-1"></div>
                                     <div className="absolute bottom-0 left-0 w-16 h-16 border-b-[3px] border-l-[3px] border-black rounded-bl-lg -m-1"></div>
                                     <div className="absolute bottom-0 right-0 w-16 h-16 border-b-[3px] border-r-[3px] border-black rounded-br-lg -m-1"></div>
                                 </div>
-
                                 {/* Header with adjusted spacing */}
                                 <div className="mb-8 mt-8">
                                     <div className="flex justify-center mb-4">
-                                        
+
                                     </div>
                                     <div className="flex flex-col items-center">
                                         <h2 className="text-3xl md:text-5xl font-bold text-green-600 mb-4" style={{ fontFamily: 'Copperplate, Fantasy' }}>
@@ -423,11 +478,12 @@ const RaceTimes = () => {
                                     </div>
                                 </div>
 
+
                                 {/* Main Content */}
                                 <div className="space-y-6">
                                     <p className="text-lg italic text-gray-600">This is to certify that</p>
-                                    <h3 className="text-3xl md:text-5xl font-extrabold text-gray-800 mb-4" 
-                                        style={{ 
+                                    <h3 className="text-3xl md:text-5xl font-extrabold text-gray-800 mb-4"
+                                        style={{
                                             fontFamily: 'Brush Script MT, cursive',
                                             marginTop: '0.3rem',
                                             marginBottom: '2rem',
@@ -437,7 +493,15 @@ const RaceTimes = () => {
                                         }}>
                                         {raceInfo.name}
                                     </h3>
-                                    
+
+                                    {/* Participant Details */}
+                                    {/* Conditional Rendering for Name Position */}
+                                    {getCertificateStyles(raceInfo?.eventid || raceInfo?.event_id).layout === "above" && (
+                                        <h3 className={getCertificateStyles(raceInfo?.eventid || raceInfo?.event_id).nameStyle}>
+                                            {raceInfo.name}
+                                        </h3>
+                                    )}
+
                                     {/* Participant Details */}
                                     <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto my-6">
                                         <div className="border-r border-gray-300">
@@ -457,6 +521,14 @@ const RaceTimes = () => {
                                             <p className="font-bold text-xl">{raceInfo.participatein} km</p>
                                         </div>
                                     </div>
+
+                                    {/* Conditional Rendering for Name Position */}
+                                    {getCertificateStyles(raceInfo?.eventid || raceInfo?.event_id).layout === "below" && (
+                                        <h3 className={getCertificateStyles(raceInfo?.eventid || raceInfo?.event_id).nameStyle}>
+                                            {raceInfo.name}
+                                        </h3>
+                                    )}
+
 
                                     {/* Achievement Text */}
                                     <div className="my-6">
@@ -542,4 +614,6 @@ const RaceTimes = () => {
     );
 };
 
-export default RaceTimes;
+export default RaceTimes2;
+
+

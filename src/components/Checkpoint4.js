@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import api from '../axios';
 
 const Checkpoint4 = () => {
     const [checkpointData, setCheckpointData] = useState([]);
 
     useEffect(() => {
-        // Fetch data from backend API
-        fetch('http://localhost:5000/checkpoint4')
-            .then((response) => response.json())
-            .then((data) => setCheckpointData(data))
-            .catch((err) => console.error('Error fetching data:', err));
+        api.get('/checkpoint4')
+            .then((response) => {
+                console.log("Fetched Data:", response.data); // Debugging
+                setCheckpointData(response.data);
+            })
+            .catch((err) => {
+                console.error('Error fetching data:', err);
+            });
     }, []);
 
     return (

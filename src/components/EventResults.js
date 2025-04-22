@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
+import api from '../axios';
 
 const EventResults = () => {
   const [results, setResults] = useState([]);
@@ -9,49 +10,57 @@ const EventResults = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bibSearch, setBibSearch] = useState('');
-  const { event_id } = useParams();
+
   const location = useLocation();
   const eventName = location.state?.name || 'Event Results';
   const navigate = useNavigate();
 
+  // Get the event ID from the location state
+  const eventId = location.state?.eventId; // Get eventId from state
+
   useEffect(() => {
+    if (!eventId) {
+      console.log("Event ID is missing or invalid");
+      navigate("/Eventlist"); // Redirect if event_id is missing
+      return;
+    }
+
     const fetchResults = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/results/${event_id}`);
-        if (!response.ok) throw new Error('Failed to fetch results');
-        const data = await response.json();
-        setResults(data);
-        setFilteredResults(data);
+        const response = await api.get(`/results/${eventId}`); // Use eventId from state
+        setResults(response.data);
+        setFilteredResults(response.data);
       } catch (err) {
-        setError(err.message);
+        console.error("Fetch Error:", err);
+        setError(err.response?.data?.message || "Failed to fetch results");
       } finally {
         setLoading(false);
       }
     };
 
     fetchResults();
-  }, [event_id]);
+  }, [eventId, navigate]); // Use eventId instead of event_id
+
+
 
   const handleBibSearch = (e) => {
     e.preventDefault();
     if (bibSearch.trim() === '') {
       setFilteredResults(results);
     } else {
-      const filtered = results.filter(result =>
-        result.bibno.toString().includes(bibSearch.trim())
-      );
+      const filtered = results.filter(result => result.event_id.toString() === eventId);
       setFilteredResults(filtered);
     }
   };
 
   const handleViewCertificate = async (bibno) => {
-    navigate("/Racetimes", {
+    navigate("/Racetimes2", {
       state: {
         bibno: bibno,
         autoGenerate: true,
         fromResults: true,
-        event_id: event_id
+       event_id: eventId
       }
     });
   };

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import api from "../axios";
 
 const Eventlist = () => {
     const [events, setEvents] = useState([]);
@@ -26,21 +27,14 @@ const Eventlist = () => {
                 ...(city && { city }),
             });
 
-            const res = await fetch(`http://localhost:5000/event_master?${queryParams}`);
-
-            if (!res.ok) {
-                const errorText = await res.text();
-                throw new Error(`Failed to fetch events: ${res.status} ${errorText}`);
-            }
-
-            let data = await res.json();
+            const res = await api.get(`/eventmaster?${queryParams}`);
+            let data = res.data;
 
             data = data.filter(event => {
                 const nameMatch = !name || event.event_name.toLowerCase().includes(name.toLowerCase());
                 const typeMatch = !type || event.event_type === type;
                 const yearMatch = !year || event.event_year.toString() === year;
                 const cityMatch = !city || event.event_city.toLowerCase().includes(city.toLowerCase());
-
                 return nameMatch && typeMatch && yearMatch && cityMatch;
             });
 
@@ -73,7 +67,7 @@ const Eventlist = () => {
                         placeholder="Event Name"
                         className="border p-2"
                     />
-                    <select value={type} onChange={(e) => setType(e.target.value)} className="border p-2 border-gray-300">
+                    <select value={type} onChange={(e) => setType(e.target.value)} className="border p-2">
                         <option value="">All Types</option>
                         {types.map((t) => (<option key={t} value={t}>{t}</option>))}
                     </select>
@@ -99,36 +93,37 @@ const Eventlist = () => {
                     <table className="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="border-b px-4 py-2 text-left">ID</th>
-                                <th className="border-b px-4 py-2 text-left">Name</th>
-                                <th className="border-b px-4 py-2 text-left">Date</th>
-                                <th className="border-b px-4 py-2 text-left">City</th>
-                                <th className="border-b px-4 py-2 text-left">Type</th>
-                                <th className="border-b px-4 py-2 text-left">Year</th>
+                                <th className="border-b px-4 py-2">ID</th>
+                                <th className="border-b px-4 py-2">Name</th>
+                                <th className="border-b px-4 py-2">City</th>
+                                <th className="border-b px-4 py-2">Type</th>
+                                <th className="border-b px-4 py-2">Year</th>
                                 <th className="border-b px-4 py-2 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {events.map((event, index) => (
-                                <tr
-                                    key={event.event_id || index}
-                                    className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                                >
+                            {events.map((event) => (
+                                <tr key={event.event_id} className="hover:bg-gray-100">
                                     <td className="border-b px-4 py-2">{event.event_id}</td>
                                     <td className="border-b px-4 py-2">{event.event_name}</td>
-                                    <td className="border-b px-4 py-2">{event.event_date}</td>
                                     <td className="border-b px-4 py-2">{event.event_city}</td>
                                     <td className="border-b px-4 py-2">{event.event_type}</td>
                                     <td className="border-b px-4 py-2">{event.event_year}</td>
                                     <td className="border-b px-4 py-2 text-center">
                                         <button
-                                            onClick={() => navigate(`/EventResults/${event.event_id}`, {
-                                                state: { eventId: event.event_id, name: event.event_name }
-                                            })}
+                                            onClick={() => navigate("/EventResults", {
+                                                state: {
+                                                    eventId: event.event_id,
+                                                    eventName: event.event_name
+                                                }
+                                            })  }
+
+                                         
                                             className="bg-blue-500 text-white px-3 py-1 rounded flex items-center justify-center"
                                         >
                                             <FontAwesomeIcon icon={faEye} className="mr-2" /> View
                                         </button>
+
                                     </td>
                                 </tr>
                             ))}

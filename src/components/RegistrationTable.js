@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../axios";
 
 const RegistrationTable = () => {
     // State to store registration data
@@ -8,9 +9,10 @@ const RegistrationTable = () => {
 
     // Fetch registration data from the backend
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/registration") // Update with your backend URL
+        api
+            .get("/registration") // Update with your backend URL
             .then((response) => {
+                console.log("API Response:", response.data)
                 setRegistrations(response.data);
             })
             .catch((err) => {

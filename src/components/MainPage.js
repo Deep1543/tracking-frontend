@@ -35,7 +35,7 @@ const MainPage = () => {
               }}
             />
           ))}
-          
+
           {/* Navigation dots */}
           <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
             {images.map((_, index) => (
@@ -43,13 +43,24 @@ const MainPage = () => {
                 key={index}
                 onClick={() => setCurrentImage(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 
-                  ${currentImage === index 
-                    ? 'bg-white scale-110 shadow-lg' 
+                  ${currentImage === index
+                    ? 'bg-white scale-110 shadow-lg'
                     : 'bg-gray-400 bg-opacity-50 hover:bg-opacity-75'}`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
+        </div>
+
+        {/* Register Now Button */}
+        <div className="flex justify-center mt-6">
+          <a
+            href="/RegisterForm"
+            className="px-6 py-3 bg-blue-600 text-white font-semibold text-lg rounded-lg shadow-lg 
+                       hover:bg-blue-700 transition-all duration-300"
+          >
+            Register Now
+          </a>
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
 function Footer() {
+  const currentYear = new Date().getFullYear(); // Get the current year dynamically
+
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="container mx-auto px-4">
@@ -8,7 +10,7 @@ function Footer() {
             <h3 className="text-xl font-semibold">About Us</h3>
             <p className="text-gray-300">Brief description of your company/website</p>
           </div>
-          
+
           {/* Quick Links Section */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Quick Links</h3>
@@ -31,12 +33,12 @@ function Footer() {
           </div>
         </div>
       </div>
-      
+
       {/* Footer Bottom */}
       <div className="border-t border-gray-800 mt-8">
         <div className="container mx-auto px-4 py-6">
           <p className="text-center text-gray-400 text-sm">
-            &copy; 2024 Your Website Name. All rights reserved.
+            &copy; {currentYear} Your Website Name. All rights reserved.
           </p>
         </div>
       </div>
@@ -44,4 +46,4 @@ function Footer() {
   );
 }
 
-export default Footer; 
+export default Footer;

@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import api from '../axios';
 
 const Finishline = () => {
     const [FinishlineData, setFinishlineData] = useState([]);
 
+
     useEffect(() => {
-        // Fetch data from backend API
-        fetch('http://localhost:5000/finishline')
-            .then((response) => response.json())
-            .then((data) => setFinishlineData(data))
+        api.get('/finishline')
+            .then((response) => {
+                console.log("API Response:", response.data);
+                setFinishlineData(response.data); // Ensure response.data is an array
+            })
             .catch((err) => console.error('Error fetching data:', err));
     }, []);
+
 
     return (
         <div className="container mx-auto p-4">

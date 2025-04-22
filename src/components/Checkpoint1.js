@@ -1,19 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import api from "../axios";
+import * as XLSX from "xlsx"; // Import SheetJS for Excel
 
 const Checkpoint1 = () => {
     const [checkpointData, setCheckpointData] = useState([]);
 
     useEffect(() => {
-        // Fetch data from backend API
-        fetch('http://localhost:5000/checkpoint1')
-            .then((response) => response.json())
-            .then((data) => setCheckpointData(data))
-            .catch((err) => console.error('Error fetching data:', err));
+        api.get("/checkpoint1")
+            .then((response) => {
+                console.log("Fetched Data:", response.data); // Debugging
+                setCheckpointData(response.data);
+            })
+            .catch((err) => {
+                console.error("Error fetching data:", err);
+            });
     }, []);
+
+    // Function to Export Data to Excel
+    const exportToExcel = () => {
+        if (checkpointData.length === 0) {
+            alert("No data available to export!");
+            return;
+        }
+
+        // Define the worksheet and workbook
+        const worksheet = XLSX.utils.json_to_sheet(checkpointData);
+        const workbook = XLSX.utils.book_new();
+
+        // Append worksheet to workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Checkpoint Data");
+
+        // Save the Excel file
+        XLSX.writeFile(workbook, "Checkpoint1_Data.xlsx");
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
             <h1 className="text-3xl font-bold text-gray-800 mb-6">Checkpoint 1 Data</h1>
+
+            {/* Export to Excel Button */}
+            <button
+                onClick={exportToExcel}
+                className="mb-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+            >
+                Export to Excel
+            </button>
 
             <div className="overflow-x-auto w-full max-w-6xl bg-white shadow rounded-lg">
                 <table className="table-auto w-full">
@@ -40,16 +71,13 @@ const Checkpoint1 = () => {
                                     <td className="px-4 py-2">{checkpoint.racetime}</td>
                                     <td className="px-4 py-2">{checkpoint.bibno}</td>
                                     <td className="px-4 py-2">
-                                        {checkpoint.IsUpload === 1 ? 'Uploaded' : 'Not Uploaded'}
+                                        {checkpoint.IsUpload === 1 ? "Uploaded" : "Not Uploaded"}
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td
-                                    colSpan="6"
-                                    className="px-4 py-2 text-center text-gray-700"
-                                >
+                                <td colSpan="6" className="px-4 py-2 text-center text-gray-700">
                                     No data found
                                 </td>
                             </tr>

@@ -30,6 +30,9 @@ const Header = () => {
     <nav className="w-full bg-beige-800 p-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
+        <button
+        onClick={()=>{navigate('/')}}
+        >
         <div className="flex items-center space-x-2">
           <div
             style={{
@@ -43,6 +46,7 @@ const Header = () => {
             className="sm:w-[250px] sm:h-[60px]"
           />
         </div>
+        </button>
 
         {/* Mobile Menu Button */}
         <button
@@ -55,8 +59,8 @@ const Header = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-2 lg:space-x-4">
           <NavButton onClick={() => navigateTo('/')} text="Home" icon={<FaHome size={20} />} />
-          <NavButton onClick={() => navigateTo('/ResultPage')} text="Result Page" icon={<FaFileAlt size={20} />} />
-          <NavButton onClick={() => navigateTo('/EventList')} text="EventList" icon={<FaCalendarAlt size={20} />} />
+          <NavButton onClick={() => navigateTo('/ResultMaster')} text="ResultMaster" icon={<FaFileAlt size={20} />} />
+          <NavButton onClick={() => navigateTo('/EventList')} text="Result Page" icon={<FaCalendarAlt size={20} />} />
         </div>
       </div>
 
@@ -69,7 +73,6 @@ const Header = () => {
         >
           <div className="space-y-2 p-4" onClick={(e) => e.stopPropagation()}>
             <MobileNavButton onClick={() => navigateTo('/main')} text="Home" icon={<FaHome size={20} />} />
-            <MobileNavButton onClick={() => navigateTo('/ResultPage')} text="Result Page" icon={<FaFileAlt size={20} />} />
             <MobileNavButton onClick={() => navigateTo('/EventList')} text="EventList" icon={<FaCalendarAlt size={20} />} />
           </div>
         </div>

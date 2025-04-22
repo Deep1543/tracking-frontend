@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import api from '../axios';
 
 const Participateinmaster = () => {
     const [participate, setparticipate] = useState([]);
 
     useEffect(() => {
         // Fetch data from backend API
-        fetch('http://localhost:5000/participateinmaster')
-            .then((response) => response.json())
-            .then((data) => setparticipate(data))
+        api.get('/participateinmaster')
+            .then((response) => {
+                console.log("API Response:", response.data);
+                setparticipate(response.data); // Ensure response.data is an array
+            })
             .catch((err) => console.error('Error fetching data:', err));
     }, []);
+   
+
 
     return (
         <div className="container mx-auto p-2 sm:p-6">

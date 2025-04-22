@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-
+import api from '../axios';
 const Usermaster = () => {
     const [UsermasterData, setUsermasterData] = useState([]);
 
     useEffect(() => {
         // Fetch data from backend API
-        fetch('http://localhost:5000/usermaster')
-            .then((response) => response.json())
-            .then((data) => setUsermasterData(data))
+        api.get('/usermaster')
+            .then((response) => {
+                console.log("API Response:", response.data);
+                setUsermasterData(response.data); // Ensure response.data is an array
+            })
             .catch((err) => console.error('Error fetching data:', err));
     }, []);
 

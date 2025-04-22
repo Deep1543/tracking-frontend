@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../axios";
 
 const RegistrationFilter = () => {
     // State to store registration data
@@ -16,9 +17,10 @@ const RegistrationFilter = () => {
 
     // Fetch registration data from the backend
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/registration")
+        api
+            .get("/registration")
             .then((response) => {
+                console.log("API Response",response.data)
                 setRegistrations(response.data);
                 setFilteredRegistrations(response.data);
             })

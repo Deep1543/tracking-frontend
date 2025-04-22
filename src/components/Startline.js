@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import api from '../axios';
 
 const Startline = () => {
     const [StartlineData, setStartlineData] = useState([]);
 
     useEffect(() => {
-        // Fetch data from backend API
-        fetch('http://localhost:5000/startline')
-            .then((response) => response.json())
-            .then((data) => setStartlineData(data))
+        api.get('/startline')
+            .then((response) => {
+                console.log("API Full Response:", response); // Logs full response
+                console.log("API Data:", response.data); // Logs actual data
+                setStartlineData(response.data);
+            })
             .catch((err) => console.error('Error fetching data:', err));
     }, []);
+
 
     return (
         <div className="container mx-auto p-6">
